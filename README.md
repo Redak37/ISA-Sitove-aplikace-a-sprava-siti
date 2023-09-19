@@ -1,2 +1,3 @@
-# ISA-Sitove-aplikace-a-sprava-siti
-5. semestr
+# [ISA]
+## 2019/20 - 5. semestr
+### Projekt - HTTP Nástěnka - 20/20

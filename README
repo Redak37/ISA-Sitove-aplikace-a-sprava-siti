@@ -1,0 +1,75 @@
+isaserver:
+    Program funguje jako server tvořící nástěnky na základě požadavků klientů.
+    
+    Spuštění: ./isaserver -p <port> [-v | --verbose]
+        <port> je celé číslo od 0 do 65535.
+        S volitelným argumentem -v nebo --verbose bude server vypisovat přijímané a odesílané zprávy na standardní výstup.
+        S argumentem -h nebo --help se vypíše nápověda a program se ukončí.
+    
+    Příklad spuštění:
+        ./isaserver -p 2025 -v
+    
+    Rozšíření:
+        Podpora znaku '_'
+        Podpora volitelného argumentu "-v"/"--verbose"
+        Podpora k "-h" i "--help"
+        Zaměnitelné pořadí argumentů
+    
+    Omezení:
+        Přijímání zpráv pouze do délky 32768 definované makrem MAX_MSG_LENGTH
+        Vyžadován standard alespoň C++11
+        Porty 0-1023 jsou vyhrazeny pouze pro uživatele s právy roota
+
+
+isaclient:
+    Program vytváří předdefinované zprávy dle argumentů a zasílá je na zadaný server.
+    Poté přijme odpověď a vypíše hlavičku na standardní chybový výstup a tělo na standardní výstup.
+    Spuštění: ./isaclient -H <host> -p <port> <command>
+        <host> je adresa serveru (v podobě IP adresy nebo doménového jména.
+        <port> je číslo od 0 do 65535, nicméně porty 0-1023 jsou vyhrazeny pro uživatele s právy roota.
+        <command> shlukuje skupinu argumentů s variantmi pro boards, board a item.
+            boards: Nepřijímá žádné argumenty.
+                Pošle žádost k získání seznamu nástěnek.
+            board: Přijímá jako argument add|delete|list <name>, kde <name> je jméno nástěnky.
+                board add <name>
+                    Pošle žádost k přidání nástěnky <name> na server.
+                board delete <name>
+                    Pošle žádost k vymazání nástěnky <name> ze serveru.
+                board list <name>
+                    Pošle žádost k vrácení obsahu nástěnky <name> ze serveru.
+            item: Přijímá jako argument ad|delete|update <name> s buď <id>, <content>, nebo obojím.
+                item add <name> <content>
+                    Pošle žádost k přidání zprávy s obsahem <content> do nástěnky <name>.
+                item delete <name> <id>
+                    Pošle žádost ke smazání zprávy s pořadovým číslem <id> z nástěnky <name>.
+                item update <name> <id> <content>
+                    Pošle žádost ke změně obsahu zprávy s pořadovýčm síslem <id> z nástěnky <name> na <content>.
+        <name> je jméno nástěnky, které podporuje znaky [a-zA-Z0-9_]
+        <id> je pořadové číslo zprávy v nástěnce
+        <content> je obsah zprávy v nástěnce
+        S argumentem -h nebo --help se vypíše nápověda a program se ukončí.
+        Příklady spuštění:
+            ./isaserver -H merlin.fit.vutbr.cz -p 2025 board add hello
+            ./isaserver -H merlin.fit.vutbr.cz -p 2025 item add hello "Hello world!"
+            ./isaserver -H merlin.fit.vutbr.cz -p 2025 boards
+            ./isaserver -H merlin.fit.vutbr.cz -p 2025 board list hello
+            
+    Rozšíření:
+        Podpora k "-h" i "--help"
+        Zaměnitelné pořadí argumentů host a port
+        Oproti serveru přijímá neomezeně dlouhé zprávy
+    
+    Omezení:
+        Část argumentů <command> musí být zadána jako poslední
+        Vyžadován standard alespoň C++11
+        Porty 0-1023 jsou vyhrazeny pouze pro uživatele s právy roota
+
+
+Odevzdané soubory:
+    isaclient.cpp
+    isaclient.hpp
+    isaserver.cpp
+    isaserver.hpp
+    makefile
+    manual.pdf
+    README
